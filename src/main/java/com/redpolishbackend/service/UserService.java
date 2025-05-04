@@ -1,0 +1,7 @@
+package com.redpolishbackend.service;
+
+import com.redpolishbackend.dto.UserDto;
+
+public interface UserService {
+    UserDto createUser(UserDto userDto);
+}
