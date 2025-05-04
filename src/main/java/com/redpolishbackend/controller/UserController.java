@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -18,11 +15,17 @@ public class UserController {
 
     private UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         System.out.println(userDto.getName());
         UserDto savedUser = userService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/sign_in/{email}")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable("email") String userEmail) {
+        UserDto userDto = userService.getUserByEmail(userEmail);
+        return  ResponseEntity.ok(userDto);
     }
 
 }

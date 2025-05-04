@@ -4,4 +4,5 @@ import com.redpolishbackend.dto.UserDto;
 
 public interface UserService {
     UserDto createUser(UserDto userDto);
+    UserDto getUserByEmail(String email);
 }
