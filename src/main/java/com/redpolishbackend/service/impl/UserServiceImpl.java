@@ -6,6 +6,7 @@ import com.redpolishbackend.exception.ResourceNotFoundException;
 import com.redpolishbackend.mapper.UserMapper;
 import com.redpolishbackend.repository.UserRepository;
 import com.redpolishbackend.service.UserService;
+import com.redpolishbackend.utils.PasswordUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         User user = UserMapper.maptoUser(userDto);
+        user.setPassword(PasswordUtils.hashPassword(user.getPassword()));
         User saveUser = userRepository.save(user);
         return UserMapper.maptoUserDto(saveUser);
     }
