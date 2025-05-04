@@ -38,4 +38,25 @@ public class UserServiceImpl implements UserService {
         }
         return UserMapper.maptoUserDto(user);
     }
+
+    @Override
+    public UserDto updateUser(String email, UserDto userDto) {
+        User userExample = new User();
+        userExample.setEmail(email);
+
+        Example<User> example = Example.of(userExample);
+
+        User userToUpdate = userRepository.findBy(example, query -> query.first().orElse(null));
+        if (userToUpdate == null) {
+            throw new ResourceNotFoundException("User with email " + email + " not found");
+        }
+
+        userToUpdate.setName(userDto.getName());
+        userToUpdate.setLast_name(userDto.getLast_name());
+        //userUpdated.setPassword(userDto.getPassword());
+
+        User updatedUserObj = userRepository.save(userToUpdate);
+
+        return UserMapper.maptoUserDto(updatedUserObj);
+    }
 }
