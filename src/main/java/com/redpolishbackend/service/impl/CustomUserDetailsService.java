@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         // Aquí puedes agregar roles si los tienes en tu modelo de usuario
-        // authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRol()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

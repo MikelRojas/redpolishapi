@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,10 @@ public class JwtService {
     private long jwtExpiration;
 
     public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -52,9 +57,28 @@ public class JwtService {
                 .compact();
     }
 
+    public boolean isTokenValid(String token, String email) {
+        final String tokenEmail = extractEmail(token).trim();
+        email = email.trim();
+
+        System.out.println("Token recibido: " + token);
+        System.out.println("Email extraído del token: " + tokenEmail);
+        System.out.println("Email esperado: " + email);
+        System.out.println("Clave secreta usada: " + secretKey);
+
+        return (tokenEmail.equals(email)) && !isTokenExpired(token);
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String tokenEmail = extractEmail(token).trim();
+        String userEmail = userDetails.getUsername().trim();
+
+        System.out.println("Token recibido: " + token);
+        System.out.println("Email extraído del token: " + tokenEmail);
+        System.out.println("Email del UserDetails: " + userDetails.getUsername());
+        System.out.println("Clave secreta usada: " + secretKey);
+
+        return (tokenEmail.equals(userEmail)) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -75,7 +99,6 @@ public class JwtService {
     }
 
     private SecretKey getSignInKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        return new SecretKeySpec(keyBytes, "HmacSHA256");
+        return new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
     }
 }

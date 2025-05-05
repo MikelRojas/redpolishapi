@@ -4,6 +4,7 @@ import com.redpolishbackend.dto.AuthResponseDto;
 import com.redpolishbackend.dto.LoginRequestDto;
 import com.redpolishbackend.dto.UserDto;
 import com.redpolishbackend.service.AuthService;
+import com.redpolishbackend.service.JwtService;
 import com.redpolishbackend.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,14 @@ public class UserController {
 
     private UserService userService;
     private AuthService authService;
+    private JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+
+        // Assign default role
+        userDto.setRol("Usuario");
+
         UserDto savedUser = userService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -45,12 +51,23 @@ public class UserController {
     }
 
     // Endpoint protegido con JWT: actualización de usuario
-    @PutMapping("/update")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,
-                                               @RequestHeader("Authorization") String token) {
-        // El correo del usuario se extrae desde el JWT
-        String userEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDto updatedUser = userService.updateUser(userEmail, userDto);
+    @PutMapping("/update/{email}")   //Update user (Gestionar usuario)
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable("email") String email,
+            @RequestBody UserDto userDto,
+            @RequestHeader("Authorization") String token) {
+
+        // Extraer el token
+        String jwtToken = token;
+        if (token.startsWith("Bearer ")) {
+            jwtToken = token.substring(7);
+        }
+
+        if (!jwtService.isTokenValid(jwtToken, email)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        UserDto updatedUser = userService.updateUser(email, userDto);
         return ResponseEntity.ok(updatedUser);
     }
 }

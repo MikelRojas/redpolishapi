@@ -16,5 +16,5 @@ public class UserDto {
     private String last_name;
     private String email;
     private String password;
-    private String rol;
+    private String rol = "Usuario";
 }

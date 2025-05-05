@@ -13,7 +13,6 @@ public class UserMapper {
         if (user.getLast_name() != null) {
             userDto.setLast_name(user.getLast_name());
         }
-        // No transferimos la contraseña por seguridad
         return userDto;
     }
 
