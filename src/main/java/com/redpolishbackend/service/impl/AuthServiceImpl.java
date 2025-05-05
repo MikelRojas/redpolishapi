@@ -52,9 +52,4 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    @Override
-    public boolean validateToken(String token) {
-
-        return false;
-    }
 }

@@ -48,10 +48,6 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,
                                                @RequestHeader("Authorization") String token) {
-        //Verify isTokenValid()
-        if (!authService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         // El correo del usuario se extrae desde el JWT
         String userEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDto updatedUser = userService.updateUser(userEmail, userDto);
