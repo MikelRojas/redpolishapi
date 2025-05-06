@@ -1,6 +1,7 @@
 package com.redpolishbackend.dto;
 
 
+import com.redpolishbackend.entity.ForgotPassword;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

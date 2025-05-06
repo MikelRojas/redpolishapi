@@ -27,4 +27,16 @@ public class User {
     private String password;
     @Column(name="rol")
     private String rol;
+
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
+
+    public User(Long id, String name, String last_name, String email, String password, String rol) {
+        this.id = id;
+        this.name = name;
+        this.last_name = last_name;
+        this.email = email;
+        this.password = password;
+        this.rol = rol;
+    }
 }
