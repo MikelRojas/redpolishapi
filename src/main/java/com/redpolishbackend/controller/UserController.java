@@ -51,7 +51,7 @@ public class UserController {
     }
 
     // Endpoint protegido con JWT: actualización de usuario
-    @PutMapping("/update/{email}")   //Update user (Gestionar usuario)
+    @PostMapping("/update/{email}")   //Update user (Gestionar usuario)
     public ResponseEntity<UserDto> updateUser(
             @PathVariable("email") String email,
             @RequestBody UserDto userDto,
