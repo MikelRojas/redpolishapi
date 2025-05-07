@@ -23,6 +23,6 @@ public class ForgotPassword {
     @Column(nullable = false)
     private Date expiration;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private User user;
 }

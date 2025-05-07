@@ -58,10 +58,12 @@ public class ForgotPasswordController {
         ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user)
                 .orElseThrow(() -> new RuntimeException("Clave dynamica invalida para el email: " + email));
 
-        if (!fp.getExpiration().before(Date.from(Instant.now()))){
-            forgotPasswordRepository.deleteById(fp.getFpid());
+        if (fp.getExpiration().before(Date.from(Instant.now()))){
+            forgotPasswordRepository.deleteOtpById(fp.getFpid());
             return new ResponseEntity<>("La clave dinamica expiro!!", HttpStatus.EXPECTATION_FAILED);
         }
+
+        forgotPasswordRepository.deleteOtpById(fp.getFpid());
 
         return ResponseEntity.ok("Clave dinamica verificada");
     }
