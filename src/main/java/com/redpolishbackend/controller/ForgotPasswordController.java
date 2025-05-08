@@ -39,6 +39,11 @@ public class ForgotPasswordController {
                 .subject("Peticion de olvide mi contraseña")
                 .build();
 
+        ForgotPassword fpOld = forgotPasswordRepository.findByUser(user).orElse(null);
+        if(fpOld == null) {
+            forgotPasswordRepository.deleteOtpById(fpOld.getFpid());
+        }
+
         ForgotPassword fp = ForgotPassword.builder()
                 .otp(otp)
                 .expiration(new Date(System.currentTimeMillis()+70*1000))
