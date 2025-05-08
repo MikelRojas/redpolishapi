@@ -53,9 +53,18 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User with email " + email + " not found");
         }
 
-        userToUpdate.setName(userDto.getName());
-        userToUpdate.setLast_name(userDto.getLast_name());
-        //userUpdated.setPassword(userDto.getPassword());
+        if (userDto.getName() != null) {
+            userToUpdate.setName(userDto.getName());
+        }
+        if (userDto.getLast_name() != null) {
+            userToUpdate.setLast_name(userDto.getLast_name());
+        }
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            userToUpdate.setPassword(PasswordUtils.hashPassword(userDto.getPassword()));
+        }
+        if (userDto.getRol() != null) {
+            userToUpdate.setRol(userDto.getRol());
+        }
 
         User updatedUserObj = userRepository.save(userToUpdate);
 
